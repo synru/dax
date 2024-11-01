@@ -1,0 +1,21 @@
+/* For two slicers that choose to filter one and another */
+
+Prod Plant Filter = 
+var v = selectedvalue('Plant Prod Toggle'[Code])
+var pl = selectedvalue(Plant[Plant])
+var prod = selectedvalue(Product[Product])
+
+return switch(v, 
+    "Plant",
+        if(
+            countrows(ALLSELECTED(Plant[Plant]))>1 && calculate(not(isempty(Product_Plant)), all(Product[Product]))
+            , 1, 
+            if(calculate(not(isempty(filter(Product_Plant, product_plant[Product] = prod && product_plant[Plant] = pl))), all(Product)),1,0)
+        ),
+    "Product",
+        if(
+            countrows(ALLSELECTED(Product[Product]))>1  && calculate(not(isempty(Product_Plant)), all(Plant[Plant]))
+            , 1, 
+            if(calculate(not(isempty(filter(Product_Plant, product_plant[Product] = prod && product_plant[Plant] = pl))), all(Plant)),1,0)
+        )
+)
